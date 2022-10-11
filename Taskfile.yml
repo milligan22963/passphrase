@@ -1,0 +1,57 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  APP: passphrase
+  SNAP: afm-"{{.APP}}"
+
+tasks:
+  default:
+    cmds:
+      - echo "{{.SNAP}}"
+    silent: true
+
+  build-app:
+    cmds:
+      - go build -o "{{.APP}}" main.go
+  
+  build:
+    cmds:
+      - snapcraft --use-lxd
+
+  debug:
+    cmds:
+      - snapcraft --use-lxd --debug
+  
+  debug-shell:
+    cmds:
+      - snap run --shell "{{.SNAP}}".shell
+
+  clean:
+    cmds:
+      - snapcraft clean --use-lxd
+
+  install:
+    cmds:
+      - snap install "{{.SNAP}}"* --devmode
+
+  remove:
+    cmds:
+      - snap remove "{{.SNAP}}"
+
+  upload-edge:
+    cmds:
+      - snapcraft upload --release=edge "{{.SNAP}}"*.snap
+
+  upload-beta:
+    cmds:
+      - snapcraft upload --release=beta "{{.SNAP}}"*.snap
+
+  upload-candidate:
+    cmds:
+      - snapcraft upload --release=candidate "{{.SNAP}}"*.snap
+
+  upload-stable:
+    cmds:
+      - snapcraft upload --release=stable "{{.SNAP}}"*.snap
