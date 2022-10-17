@@ -24,10 +24,10 @@ archives:
       - src: wordlist.txt
 dockers:
   - image_templates:
-    - "ghcr.io/asphaltbuffet/passphrase:latest"
-    - "ghcr.io/asphaltbuffet/passphrase:{{ .Major }}"
-    - "ghcr.io/asphaltbuffet/passphrase:{{ .Major }}.{{ .Minor }}"
-    - "ghcr.io/asphaltbuffet/passphrase:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
+    - "ghcr.io/${{ github.actor }}/passphrase:latest"
+    - "ghcr.io/${{ github.actor }}/passphrase:{{ .Major }}"
+    - "ghcr.io/${{ github.actor }}/passphrase:{{ .Major }}.{{ .Minor }}"
+    - "ghcr.io/${{ github.actor }}/passphrase:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
     build_flag_templates:
     - "--pull"
     # OCI annotations: https://github.com/opencontainers/image-spec/blob/main/annotations.md
@@ -38,7 +38,7 @@ dockers:
     - "--label=org.opencontainers.image.source={{.GitURL}}"
 release:
   github:
-    owner: asphaltbuffet
+    owner: ${{ github.actor }}
     name: passphrase
   name_template: "{{.Version}}"
   prerelease: auto
