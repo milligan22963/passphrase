@@ -3,7 +3,7 @@
 */
 package main
 
-import "github.com/milligan22963/passphrase/cmd"
+import "github.com/asphaltbuffet/passphrase/cmd"
 
 func main() {
 	cmd.Execute()
