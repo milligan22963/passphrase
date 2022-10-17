@@ -1,5 +1,5 @@
 /*
-  Copyright © 2022 DW Milligan dwm@afmsoftware.com
+Copyright © 2022 DW Milligan dwm@afmsoftware.com
 */
 package main
 
