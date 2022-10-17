@@ -1,0 +1,49 @@
+before:
+  hooks:
+    - go mod download
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+archives:
+  - format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - src: README*
+        dst: docs
+      - src: LICENSE*
+        dst: docs
+      - src: CHANGELOG*
+        dst: docs
+      - src: wordlist.txt
+dockers:
+  - image_templates:
+    - "ghcr.io/asphaltbuffet/passphrase:latest"
+    - "ghcr.io/asphaltbuffet/passphrase:{{ .Major }}"
+    - "ghcr.io/asphaltbuffet/passphrase:{{ .Major }}.{{ .Minor }}"
+    - "ghcr.io/asphaltbuffet/passphrase:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
+    build_flag_templates:
+    - "--pull"
+    # OCI annotations: https://github.com/opencontainers/image-spec/blob/main/annotations.md
+    - "--label=org.opencontainers.image.created={{.Date}}"
+    - "--label=org.opencontainers.image.name={{.ProjectName}}"
+    - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+    - "--label=org.opencontainers.image.version={{.Version}}"
+    - "--label=org.opencontainers.image.source={{.GitURL}}"
+release:
+  github:
+    owner: asphaltbuffet
+    name: passphrase
+  name_template: "{{.Version}}"
+  prerelease: auto
+  mode: append
+changelog:
+  skip: false
+announce:
+  skip: 'true'
