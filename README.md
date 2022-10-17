@@ -11,7 +11,7 @@
 
 ## Description
 
-Generate a random passphrase inspired by the [XKCD comic](https://xkcd.com/936/).
+Generate a random passphrase inspired by the [XKCD comic](https://xkcd.com/936/). The default word list is an edited subset of data from [wordfrequency.info](https://www.wordfrequency.info/).
 
 ## Usage
 
