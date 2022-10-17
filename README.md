@@ -11,7 +11,7 @@
 
 ## Description
 
-Generate a random passphrase inspired by the XKCD comic.
+Generate a random passphrase inspired by the [XKCD comic](https://xkcd.com/936/).
 
 ## Usage
 
