@@ -1,7 +1,7 @@
 # Passphrase
 
 [![Keep a Changelog](https://img.shields.io/badge/changelog-Keep%20a%20Changelog-%23E05735)](CHANGELOG.md)
-[![GitHub Release](https://img.shields.io/github/v/release/asphaltbuffet/passphrase)](https://github.com/asphaltbuffet/passphrase/releases)
+[![GitHub Release](https://img.shields.io/github/v/release/milligan22963/passphrase)](https://github.com/milligan22963/passphrase/releases)
 [![Go Reference](https://pkg.go.dev/badge/github.com/asphaltbuffet/passphrase.svg)](https://pkg.go.dev/github.com/asphaltbuffet/passphrase)
 [![go.mod](https://img.shields.io/github/go-mod/go-version/asphaltbuffet/passphrase)](go.mod)
 [![LICENSE](https://img.shields.io/github/license/asphaltbuffet/passphrase)](LICENSE)
