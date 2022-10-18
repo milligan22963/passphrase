@@ -2,7 +2,7 @@ linters-settings:
   gocyclo:
     min-complexity: 15
   goimports:
-    local-prefixes: github.com/asphaltbuffet/passphrase
+    local-prefixes: github.com/milligan22963/passphrase
   govet:
     check-shadowing: true
   misspell:
