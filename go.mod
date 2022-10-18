@@ -1,4 +1,4 @@
-module github.com/asphaltbuffet/passphrase
+module github.com/milligan22963/passphrase
 
 go 1.18
 
