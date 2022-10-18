@@ -14,7 +14,7 @@
     // gopls
     "go.useLanguageServer": true,
     "gopls": {
-        "formatting.local": "github.com/asphaltbuffet/passphrase",
+        "formatting.local": "github.com/milligan22963/passphrase",
         "formatting.gofumpt": true
     },
     // golangci-lint  
