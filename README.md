@@ -7,7 +7,7 @@
 [![LICENSE](https://img.shields.io/github/license/milligan22963/passphrase)](LICENSE)
 [![Build Status](https://img.shields.io/github/workflow/status/milligan22963/passphrase/build)](https://github.com/milligan22963/passphrase/actions?query=workflow%3Abuild+branch%3Amain)
 [![Go Report Card](https://goreportcard.com/badge/github.com/milligan22963/passphrase)](https://goreportcard.com/report/github.com/milligan22963/passphrase)
-[![Codecov](https://codecov.io/gh/asphaltbuffet/passphrase/branch/main/graph/badge.svg)](https://codecov.io/gh/asphaltbuffet/passphrase)
+[![Codecov](https://codecov.io/gh/milligan22963/passphrase/branch/main/graph/badge.svg)](https://codecov.io/gh/milligan22963/passphrase)
 
 ## Description
 
