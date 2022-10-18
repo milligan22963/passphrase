@@ -4,7 +4,7 @@
 [![GitHub Release](https://img.shields.io/github/v/release/milligan22963/passphrase)](https://github.com/milligan22963/passphrase/releases)
 [![Go Reference](https://pkg.go.dev/badge/github.com/milligan22963/passphrase.svg)](https://pkg.go.dev/github.com/milligan22963/passphrase)
 [![go.mod](https://img.shields.io/github/go-mod/go-version/milligan22963/passphrase)](go.mod)
-[![LICENSE](https://img.shields.io/github/license/asphaltbuffet/passphrase)](LICENSE)
+[![LICENSE](https://img.shields.io/github/license/milligan22963/passphrase)](LICENSE)
 [![Build Status](https://img.shields.io/github/workflow/status/asphaltbuffet/passphrase/build)](https://github.com/asphaltbuffet/passphrase/actions?query=workflow%3Abuild+branch%3Amain)
 [![Go Report Card](https://goreportcard.com/badge/github.com/asphaltbuffet/passphrase)](https://goreportcard.com/report/github.com/asphaltbuffet/passphrase)
 [![Codecov](https://codecov.io/gh/asphaltbuffet/passphrase/branch/main/graph/badge.svg)](https://codecov.io/gh/asphaltbuffet/passphrase)
