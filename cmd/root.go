@@ -56,10 +56,15 @@ func ValidateFlags(cmd *cobra.Command, args []string) error {
 	}
 
 	if phraseCount < MinimumWordCount {
-		return fmt.Errorf("must use at least %d words in passphrase: number = %d", MinimumWordCount, phraseCount)
+		return fmt.Errorf("invalid number of words: number = %d", phraseCount)
 	}
 
 	return nil
+}
+
+// GetRootCmd gets the application root command.
+func GetRootCmd() *cobra.Command {
+	return rootCmd
 }
 
 // RunRootCmd is executed when the application is run without any subcommands.
