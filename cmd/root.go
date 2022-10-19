@@ -36,13 +36,13 @@ var rootCmd = &cobra.Command{
 	Long:              rootCommandLongDesc,
 	Example:           `passphrase --separator='-' --number=4 --dictionary="./wordlist.txt"`,
 	Args:              cobra.NoArgs,
-	PersistentPreRunE: ValidateFlags,
+	PersistentPreRunE: validateFlags,
 	RunE:              RunRootCmd,
 }
 
 func init() {
 	// global params/flags
-	rootCmd.PersistentFlags().StringVarP(&dict, "dictionary", "d", "./wordlist.txt", "Path to word source (text file).")
+	rootCmd.PersistentFlags().StringVarP(&dict, "dictionary", "d", "wordlist.txt", "Path to word source (text file).")
 
 	// main app params/flags
 	rootCmd.Flags().IntVarP(&phraseCount, "number", "n", MinimumWordCount, "Number of words to include.")
@@ -50,7 +50,7 @@ func init() {
 }
 
 // ValidateFlags checks that the flags are within expected boundaries.
-func ValidateFlags(cmd *cobra.Command, args []string) error {
+func validateFlags(cmd *cobra.Command, args []string) error {
 	if _, err := os.Stat(dict); err != nil {
 		return fmt.Errorf("bad word list: %w", err)
 	}
