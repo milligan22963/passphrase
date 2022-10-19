@@ -24,10 +24,10 @@ archives:
       - src: wordlist.txt
 dockers:
   - image_templates:
-    - "ghcr.io/${{ github.actor }}/passphrase:latest"
-    - "ghcr.io/${{ github.actor }}/passphrase:{{ .Major }}"
-    - "ghcr.io/${{ github.actor }}/passphrase:{{ .Major }}.{{ .Minor }}"
-    - "ghcr.io/${{ github.actor }}/passphrase:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
+    - "ghcr.io/milligan22963/passphrase:latest"
+    - "ghcr.io/milligan22963/passphrase:{{ .Major }}"
+    - "ghcr.io/milligan22963/passphrase:{{ .Major }}.{{ .Minor }}"
+    - "ghcr.io/milligan22963/passphrase:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
     build_flag_templates:
     - "--pull"
     # OCI annotations: https://github.com/opencontainers/image-spec/blob/main/annotations.md
@@ -38,7 +38,7 @@ dockers:
     - "--label=org.opencontainers.image.source={{.GitURL}}"
 release:
   github:
-    owner: ${{ github.actor }}
+    owner: milligan22963
     name: passphrase
   name_template: "{{.Version}}"
   prerelease: auto
