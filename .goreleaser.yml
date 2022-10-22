@@ -21,7 +21,6 @@ archives:
         dst: docs
       - src: CHANGELOG*
         dst: docs
-      - src: wordlist.txt
 dockers:
   - image_templates:
     - "ghcr.io/milligan22963/passphrase:latest"
