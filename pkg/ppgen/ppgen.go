@@ -24,7 +24,7 @@ func GeneratePhraseWords(n int) ([]string, error) {
 	for i := 0; i < n; i++ {
 		wordIndex, err := rand.Int(rand.Reader, big.NewInt(int64(max)))
 		if err != nil {
-			return nil, fmt.Errorf("failed to get word %d of %d: %w", i+1, n+1, err)
+			return nil, fmt.Errorf("failed to get word %d of %d: %w", i+1, n, err)
 		}
 
 		words = append(words, wordList[wordIndex.Int64()])
