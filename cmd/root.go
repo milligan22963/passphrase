@@ -27,15 +27,6 @@ const (
 const rootCommandLongDesc string = "passphrase is a password generator for " +
 	"multi-word passphrases based on an XKCD comic (936)."
 
-// ValidateFlags checks that the flags are within expected boundaries.
-func validateFlags(cmd *cobra.Command, args []string) error {
-	if phraseCount < MinimumWordCount {
-		return fmt.Errorf("invalid number of words: number = %d", phraseCount)
-	}
-
-	return nil
-}
-
 	// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:     "passphrase [flags]",
@@ -72,11 +63,16 @@ func RootCmdFlags(cmd *cobra.Command) {
 }
 
 // ValidateFlags checks that the flags are within expected boundaries.
-}
+func ValidateFlags(cmd *cobra.Command, args []string) error {
+	if phraseCount < MinimumWordCount {
+		return fmt.Errorf("invalid number of words: number = %d", phraseCount)
+	}
 
-// GetRootCmd gets the application root command.
-func GetRootCmd() *cobra.Command {
-	return rootCmd
+	if len(separator) != 1 {
+		return fmt.Errorf("separator must be a single-character string: separator = %s, length=%d", separator, len(separator))
+	}
+
+	return nil
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
