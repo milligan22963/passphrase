@@ -7,46 +7,58 @@ package cmd_test
 
 import (
 	"bytes"
-	"io"
 	"strings"
 	"testing"
 
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 
 	"github.com/milligan22963/passphrase/cmd"
 )
 
 func TestInputValidationErrors(t *testing.T) {
 	tests := []struct {
-		name      string
-		args      []string
-		assertion assert.ErrorAssertionFunc
-		want      string
+		name          string
+		args          []string
+		assertion     assert.ErrorAssertionFunc
+		wantErrString string
 	}{
 		{
-			name:      "number flag too small",
-			args:      []string{`-n=1`},
-			assertion: assert.Error,
-			want:      "invalid number of words:",
+			name:          "validation passes - explicit defaults",
+			args:          []string{"-n=4", "-s=_"},
+			assertion:     assert.NoError,
+			wantErrString: "",
+		},
+		{
+			name:          "number flag too small",
+			args:          []string{`-n=1`},
+			assertion:     assert.Error,
+			wantErrString: "invalid number of words:",
+		},
+		{
+			name:          "separator flag too long",
+			args:          []string{`-s=abcd`},
+			assertion:     assert.Error,
+			wantErrString: "separator must be a single-character string:",
+		},
+		{
+			name:          "invalid emoji separator",
+			args:          []string{"-s=🐈"},
+			assertion:     assert.Error,
+			wantErrString: "separator must be a single-character string:",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := cmd.NewRootCmd()
+			root := &cobra.Command{Use: "root", PreRunE: cmd.ValidateFlags, RunE: cmd.RunRootCmdE}
+			cmd.RootCmdFlags(root)
 
-			b := bytes.NewBufferString("")
-			c.SetOut(b)
-			c.SetErr(b)
-			c.SetArgs(tt.args)
+			out, err := execute(t, root, tt.args...)
+			tt.assertion(t, err)
 
-			tt.assertion(t, c.Execute())
-
-			out, err := io.ReadAll(b)
-			require.NoError(t, err)
-
-			assert.Contains(t, string(out), tt.want)
+			if err != nil {
+				assert.Contains(t, out, tt.wantErrString)
+			}
 		})
 	}
 }
@@ -64,17 +76,17 @@ func TestIntegrationWithParams(t *testing.T) {
 		want      wants
 	}{
 		{
-			name:      "long separator",
-			args:      []string{`-s=FOO`},
+			name:      "letter separator",
+			args:      []string{`-s=F`},
 			assertion: assert.NoError,
 			want: wants{
 				n: 4,
-				s: "FOO",
+				s: "F",
 			},
 		},
 		{
 			name:      "explicit defaults",
-			args:      []string{`-n=4`, `-s="_"`},
+			args:      []string{`-n=4`, `-s=_`},
 			assertion: assert.NoError,
 			want: wants{
 				n: 4,
@@ -91,59 +103,50 @@ func TestIntegrationWithParams(t *testing.T) {
 			},
 		},
 		{
-			name:      "dash separator",
-			args:      []string{`-s="-"`},
+			name:      "numeric separator",
+			args:      []string{`-s=3`},
 			assertion: assert.NoError,
 			want: wants{
 				n: 4,
-				s: "-",
+				s: "3",
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := cmd.NewRootCmd()
+			root := &cobra.Command{Use: "root", PreRunE: cmd.ValidateFlags, RunE: cmd.RunRootCmdE}
+			cmd.RootCmdFlags(root)
 
-			b := bytes.NewBufferString("")
-			c.SetOut(b)
-			c.SetErr(b)
-			c.SetArgs(tt.args)
+			out, err := execute(t, root, tt.args...)
+			tt.assertion(t, err)
 
-			tt.assertion(t, c.Execute())
-
-			out, err := io.ReadAll(b)
-			require.NoError(t, err)
-
-			assert.Len(t, strings.Split(string(out), tt.want.s), tt.want.n)
+			if err == nil {
+				assert.Len(t, strings.Split(out, tt.want.s), tt.want.n)
+			}
 		})
 	}
 }
 
 func TestIntegrationWithDefaults(t *testing.T) {
-	c := cmd.NewRootCmd()
+	root := &cobra.Command{Use: "root", PreRunE: cmd.ValidateFlags, RunE: cmd.RunRootCmdE}
+	cmd.RootCmdFlags(root)
 
-	b := bytes.NewBufferString("")
-	c.SetOut(b)
-	c.SetErr(b)
-	c.SetArgs([]string{})
+	got, err := execute(t, root)
 
-	assert.NoError(t, c.Execute())
+	assert.NoError(t, err)
 
-	out, err := io.ReadAll(b)
-	require.NoError(t, err)
-
-	assert.Len(t, strings.Split(string(out), "_"), 4)
+	assert.Len(t, strings.Split(got, "_"), 4)
 }
 
-func ExecuteCommandC(t *testing.T, root *cobra.Command, args ...string) (*cobra.Command, string, error) {
+func execute(t *testing.T, cmd *cobra.Command, args ...string) (string, error) {
 	t.Helper()
 
 	buf := new(bytes.Buffer)
-	root.SetOut(buf)
-	root.SetErr(buf)
-	root.SetArgs(args)
+	cmd.SetOut(buf)
+	cmd.SetErr(buf)
+	cmd.SetArgs(args)
 
-	c, err := root.ExecuteC()
+	err := cmd.Execute()
 
-	return c, buf.String(), err
+	return strings.TrimSpace(buf.String()), err
 }
