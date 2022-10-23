@@ -14,8 +14,6 @@ import (
 )
 
 var (
-	rootCmd *cobra.Command
-
 	// Used for flags
 	separator   string
 	phraseCount int
