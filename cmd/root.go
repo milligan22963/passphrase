@@ -14,8 +14,6 @@ import (
 )
 
 var (
-	rootCmd *cobra.Command
-
 	// Used for flags
 	separator   string
 	phraseCount int
@@ -29,10 +27,6 @@ const (
 const rootCommandLongDesc string = "passphrase is a password generator for " +
 	"multi-word passphrases based on an XKCD comic (936)."
 
-func init() {
-	NewRootCmd()
-}
-
 // ValidateFlags checks that the flags are within expected boundaries.
 func validateFlags(cmd *cobra.Command, args []string) error {
 	if phraseCount < MinimumWordCount {
@@ -42,33 +36,42 @@ func validateFlags(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-// NewRootCmd creates the application root command.
-func NewRootCmd() *cobra.Command {
 	// rootCmd represents the base command when called without any subcommands
-	rootCmd = &cobra.Command{
-		Use:     "passphrase [flags]",
-		Version: "1.0.0",
-		Short:   "An app to generate a random passphrase",
-		Long:    rootCommandLongDesc,
-		Example: `passphrase --separator='-' --number=4`,
-		Args:    cobra.NoArgs,
-		PreRunE: validateFlags,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			out, err := ppgen.GeneratePassPhrase(phraseCount, separator)
-			if err != nil {
-				return fmt.Errorf("failed to generate passphrase")
-			}
+var rootCmd = &cobra.Command{
+	Use:     "passphrase [flags]",
+	Version: "1.0.0",
+	Short:   "An app to generate a random passphrase",
+	Long:    rootCommandLongDesc,
+	Example: `passphrase --separator='-' --number=4`,
+	Args:    cobra.NoArgs,
+	PreRunE: ValidateFlags,
+	RunE:    RunRootCmdE,
+}
 
-			cmd.Println(out)
-			return nil
-		},
+func init() {
+	RootCmdFlags(rootCmd)
+}
+
+// RunRootCmdE is the main entry point for the root command.
+func RunRootCmdE(cmd *cobra.Command, args []string) error {
+	out, err := ppgen.GeneratePassPhrase(phraseCount, separator)
+	if err != nil {
+		return fmt.Errorf("failed to generate passphrase")
 	}
 
-	// main app params/flags
-	rootCmd.Flags().IntVarP(&phraseCount, "number", "n", MinimumWordCount, "Number of words to include.")
-	rootCmd.Flags().StringVarP(&separator, "separator", "s", "_", "Separator between words.")
+	cmd.Println(out)
 
-	return rootCmd
+	return nil
+}
+
+// RootCmdFlags adds flags to the root command.
+func RootCmdFlags(cmd *cobra.Command) {
+	// main app params/flags
+	cmd.Flags().IntVarP(&phraseCount, "number", "n", MinimumWordCount, "Number of words to include.")
+	cmd.Flags().StringVarP(&separator, "separator", "s", "_", "Separator between words.")
+}
+
+// ValidateFlags checks that the flags are within expected boundaries.
 }
 
 // GetRootCmd gets the application root command.
