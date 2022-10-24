@@ -7,14 +7,14 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/spf13/cobra"
+
+	"github.com/milligan22963/passphrase/pkg/ppgen"
 )
 
 var (
 	// Used for flags
-	dict        string
 	separator   string
 	phraseCount int
 )
@@ -25,46 +25,53 @@ const (
 )
 
 const rootCommandLongDesc string = "passphrase is a password generator for " +
-	"multi-word passphrases based on an XKCD comic (936). The list of seed words " +
-	"can be customized by the user and length of password modified as needed."
+	"multi-word passphrases based on an XKCD comic (936)."
 
-// rootCmd represents the base command when called without any subcommands
+	// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:               "passphrase [flags]",
-	Version:           "1.0.0",
-	Short:             "An app to generate a random passphrase",
-	Long:              rootCommandLongDesc,
-	Example:           `passphrase --separator='-' --number=4 --dictionary="./wordlist.txt"`,
-	Args:              cobra.NoArgs,
-	PersistentPreRunE: ValidateFlags,
-	RunE:              RunRootCmd,
+	Use:     "passphrase [flags]",
+	Version: "1.0.0",
+	Short:   "An app to generate a random passphrase",
+	Long:    rootCommandLongDesc,
+	Example: `passphrase --separator='-' --number=4`,
+	Args:    cobra.NoArgs,
+	PreRunE: ValidateFlags,
+	RunE:    RunRootCmdE,
 }
 
 func init() {
-	// global params/flags
-	rootCmd.PersistentFlags().StringVarP(&dict, "dictionary", "d", "./wordlist.txt", "Path to word source (text file).")
-
-	// main app params/flags
-	rootCmd.Flags().IntVarP(&phraseCount, "number", "n", MinimumWordCount, "Number of words to include.")
-	rootCmd.Flags().StringVarP(&separator, "separator", "s", "_", "Separator between words.")
+	RootCmdFlags(rootCmd)
 }
 
-// ValidateFlags checks that the flags are within expected boundaries.
-func ValidateFlags(cmd *cobra.Command, args []string) error {
-	if _, err := os.Stat(dict); err != nil {
-		return fmt.Errorf("bad word list: %w", err)
+// RunRootCmdE is the main entry point for the root command.
+func RunRootCmdE(cmd *cobra.Command, args []string) error {
+	out, err := ppgen.GeneratePassPhrase(phraseCount, separator)
+	if err != nil {
+		return fmt.Errorf("failed to generate passphrase")
 	}
 
-	if phraseCount < MinimumWordCount {
-		return fmt.Errorf("must use at least %d words in passphrase: number = %d", MinimumWordCount, phraseCount)
-	}
+	cmd.Println(out)
 
 	return nil
 }
 
-// RunRootCmd is executed when the application is run without any subcommands.
-func RunRootCmd(cmd *cobra.Command, args []string) error {
-	cmd.Printf("passphrase called: dictionary=%s; number=%d; separator=%s\n", dict, phraseCount, separator)
+// RootCmdFlags adds flags to the root command.
+func RootCmdFlags(cmd *cobra.Command) {
+	// main app params/flags
+	cmd.Flags().IntVarP(&phraseCount, "number", "n", MinimumWordCount, "Number of words to include.")
+	cmd.Flags().StringVarP(&separator, "separator", "s", "_", "Separator between words.")
+}
+
+// ValidateFlags checks that the flags are within expected boundaries.
+func ValidateFlags(cmd *cobra.Command, args []string) error {
+	if phraseCount < MinimumWordCount {
+		return fmt.Errorf("invalid number of words: number = %d", phraseCount)
+	}
+
+	if len(separator) != 1 {
+		return fmt.Errorf("separator must be a single-character string: separator = %s, length=%d", separator, len(separator))
+	}
+
 	return nil
 }
 

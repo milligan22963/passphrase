@@ -20,6 +20,7 @@ linters:
   enable:
     - dogsled
     - errcheck
+    - errorlint
     - exportloopref
     - funlen
     # - gochecknoinits
@@ -37,9 +38,11 @@ linters:
     - govet
     - ineffassign
     - misspell
+    - noctx
     - nolintlint
     - staticcheck
     - stylecheck
+    - thelper
     - typecheck
     - unconvert
     - unparam
@@ -49,3 +52,8 @@ linters:
 issues:
   # enable issues excluded by default 
   exclude-use-default: false
+  exclude-rules:
+    - path: _test.go
+      linters:
+        - funlen
+        - dupl
