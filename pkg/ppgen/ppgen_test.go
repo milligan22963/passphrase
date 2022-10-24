@@ -15,30 +15,52 @@ import (
 
 func TestGeneratePhraseWords(t *testing.T) {
 	type args struct {
-		n int
+		n    int
+		seed string
 	}
+
 	tests := []struct {
-		name    string
-		args    args
-		want    int
-		wantErr bool
+		name      string
+		args      args
+		want      []string
+		assertion assert.ErrorAssertionFunc
 	}{
 		{
 			name: "expected default",
 			args: args{
-				n: 4,
+				n:    4,
+				seed: "1",
 			},
-			want:    4,
-			wantErr: false,
+			want:      []string{"alcohol", "lucky", "draw", "ghost"},
+			assertion: assert.NoError,
+		},
+		{
+			name: "basic with custom seed",
+			args: args{
+				n:    4,
+				seed: "cat",
+			},
+			want:      []string{"sudden", "dentist", "clerk", "practice"},
+			assertion: assert.NoError,
+		},
+		{
+			name: "negative number of words",
+			args: args{
+				n:    -1,
+				seed: "",
+			},
+			want:      []string{},
+			assertion: assert.Error,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ppgen.GeneratePhraseWords(tt.args.n)
-			if !assert.Equal(t, err != nil, tt.wantErr, "words: %v, error = %v, wantErr %v", got, err, tt.wantErr, tt.want) {
-				return
+			got, err := ppgen.GeneratePhraseWords(tt.args.n, tt.args.seed)
+			tt.assertion(t, err)
+
+			if err == nil {
+				assert.Equal(t, tt.want, got)
 			}
-			assert.Equal(t, len(got), tt.want)
 		})
 	}
 }
