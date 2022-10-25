@@ -76,56 +76,6 @@ func TestIntegrationWithParams(t *testing.T) {
 		want      wants
 	}{
 		{
-			name:      "letter separator",
-			args:      []string{`-s=F`},
-			assertion: assert.NoError,
-			want: wants{
-				n: 4,
-				s: "F",
-			},
-		},
-		{
-			name:      "explicit defaults",
-			args:      []string{`-n=4`, `-s=_`},
-			assertion: assert.NoError,
-			want: wants{
-				n: 4,
-				s: "_",
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			c := cmd.NewRootCmd()
-
-			b := bytes.NewBufferString("")
-			c.SetOut(b)
-			c.SetErr(b)
-			c.SetArgs(tt.args)
-
-			tt.assertion(t, c.Execute())
-
-			out, err := io.ReadAll(b)
-			require.NoError(t, err)
-
-			assert.Contains(t, string(out), tt.want)
-		})
-	}
-}
-
-func TestIntegrationWithParams(t *testing.T) {
-	type wants struct {
-		n int
-		s string
-	}
-
-	tests := []struct {
-		name      string
-		args      []string
-		assertion assert.ErrorAssertionFunc
-		want      wants
-	}{
-		{
 			name:      "big phrase",
 			args:      []string{`-n=42`},
 			assertion: assert.NoError,
