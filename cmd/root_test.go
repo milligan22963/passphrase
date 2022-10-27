@@ -23,30 +23,10 @@ func TestInputValidationErrors(t *testing.T) {
 		assertion     assert.ErrorAssertionFunc
 		wantErrString string
 	}{
-		{
-			name:          "validation passes - explicit defaults",
-			args:          []string{"-n=4", "-s=_"},
-			assertion:     assert.NoError,
-			wantErrString: "",
-		},
-		{
-			name:          "number flag too small",
-			args:          []string{`-n=1`},
-			assertion:     assert.Error,
-			wantErrString: "invalid number of words:",
-		},
-		{
-			name:          "separator flag too long",
-			args:          []string{`-s=abcd`},
-			assertion:     assert.Error,
-			wantErrString: "separator must be a single-character string:",
-		},
-		{
-			name:          "invalid emoji separator",
-			args:          []string{"-s=🐈"},
-			assertion:     assert.Error,
-			wantErrString: "separator must be a single-character string:",
-		},
+		{"validation passes - explicit defaults", []string{"-n=4", "-s=_"}, assert.NoError, ""},
+		{"number flag too small", []string{`-n=1`}, assert.Error, "invalid number of words:"},
+		{"separator flag too long", []string{`-s=abcd`}, assert.Error, "separator must be a single-character string:"},
+		{"invalid emoji separator", []string{"-s=🐈"}, assert.Error, "separator must be a single-character string:"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -75,42 +55,8 @@ func TestIntegrationWithParams(t *testing.T) {
 		assertion assert.ErrorAssertionFunc
 		want      wants
 	}{
-		{
-			name:      "letter separator",
-			args:      []string{`-s=F`},
-			assertion: assert.NoError,
-			want: wants{
-				n: 4,
-				s: "F",
-			},
-		},
-		{
-			name:      "explicit defaults",
-			args:      []string{`-n=4`, `-s=_`},
-			assertion: assert.NoError,
-			want: wants{
-				n: 4,
-				s: "_",
-			},
-		},
-		{
-			name:      "big phrase",
-			args:      []string{`-n=42`},
-			assertion: assert.NoError,
-			want: wants{
-				n: 42,
-				s: "_",
-			},
-		},
-		{
-			name:      "numeric separator",
-			args:      []string{`-s=3`},
-			assertion: assert.NoError,
-			want: wants{
-				n: 4,
-				s: "3",
-			},
-		},
+		{"big phrase", []string{`-n=42`}, assert.NoError, wants{42, "_"}},
+		{"numeric separator", []string{`-s=3`}, assert.NoError, wants{4, "3"}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

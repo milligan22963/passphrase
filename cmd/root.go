@@ -17,6 +17,7 @@ var (
 	// Used for flags
 	separator   string
 	phraseCount int
+	seed        string
 )
 
 const (
@@ -45,7 +46,7 @@ func init() {
 
 // RunRootCmdE is the main entry point for the root command.
 func RunRootCmdE(cmd *cobra.Command, args []string) error {
-	out, err := ppgen.GeneratePassPhrase(phraseCount, separator)
+	out, err := ppgen.GeneratePassPhrase(phraseCount, separator, seed)
 	if err != nil {
 		return fmt.Errorf("failed to generate passphrase")
 	}
@@ -60,6 +61,8 @@ func RootCmdFlags(cmd *cobra.Command) {
 	// main app params/flags
 	cmd.Flags().IntVarP(&phraseCount, "number", "n", MinimumWordCount, "Number of words to include.")
 	cmd.Flags().StringVarP(&separator, "separator", "s", "_", "Separator between words.")
+	cmd.Flags().StringVar(&seed, "seed", "", "Seed used to generate passphrase.")
+	_ = cmd.Flags().MarkHidden("seed") // we don't really care if this fails.
 }
 
 // ValidateFlags checks that the flags are within expected boundaries.
